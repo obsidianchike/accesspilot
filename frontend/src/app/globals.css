@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────
+   AccessPilot Design Tokens
+   Microsoft Fluent-inspired · accessibility-first
+───────────────────────────────────────────── */
+:root {
+  /* Brand */
+  --pilot-blue:       #3366f4;
+  --pilot-blue-dark:  #1f4de0;
+  --pilot-blue-light: #eef4ff;
+
+  /* Severity — WCAG AA contrast guaranteed */
+  --critical:   #dc2626;
+  --serious:    #ea580c;
+  --moderate:   #ca8a04;
+  --minor:      #16a34a;
+
+  /* Severity bg (for badges) */
+  --critical-bg:   #fff1f2;
+  --serious-bg:    #fff7ed;
+  --moderate-bg:   #fefce8;
+  --minor-bg:      #f0fdf4;
+
+  /* Severity text (on bg) */
+  --critical-text:  #b91c1c;
+  --serious-text:   #c2410c;
+  --moderate-text:  #a16207;
+  --minor-text:     #15803d;
+
+  /* Surface */
+  --surface-0:   #ffffff;
+  --surface-1:   #f8fafc;
+  --surface-2:   #f1f5f9;
+  --surface-3:   #e2e8f0;
+
+  /* Text */
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary:  #94a3b8;
+
+  /* Border */
+  --border-default: #e2e8f0;
+  --border-subtle:  #f1f5f9;
+  --border-strong:  #cbd5e1;
+
+  /* Score ring */
+  --ring-size: 120px;
+}
+
+/* Dark mode tokens */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-0:   #0f172a;
+    --surface-1:   #1e293b;
+    --surface-2:   #263548;
+    --surface-3:   #334155;
+
+    --text-primary:   #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-tertiary:  #475569;
+
+    --border-default: #1e293b;
+    --border-subtle:  #0f172a;
+    --border-strong:  #334155;
+
+    --pilot-blue-light: #1e2d5a;
+
+    --critical-bg:   #450a0a;
+    --serious-bg:    #431407;
+    --moderate-bg:   #422006;
+    --minor-bg:      #052e16;
+
+    --critical-text:  #fca5a5;
+    --serious-text:   #fdba74;
+    --moderate-text:  #fde047;
+    --minor-text:     #86efac;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Base Resets
+───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--surface-1);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Focus ring — accessible and on-brand */
+:focus-visible {
+  outline: 2px solid var(--pilot-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─────────────────────────────────────────────
+   Scrollbar styling (Webkit)
+───────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--surface-1); }
+::-webkit-scrollbar-thumb  { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ─────────────────────────────────────────────
+   Utility classes not in Tailwind by default
+───────────────────────────────────────────── */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  /* Glass card effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+  @media (prefers-color-scheme: dark) {
+    .glass {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  /* Code block in violation fix panels */
+  .code-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    background: var(--surface-0);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* Score color helpers */
+  .score-great  { color: #16a34a; }
+  .score-good   { color: #ca8a04; }
+  .score-poor   { color: #ea580c; }
+  .score-bad    { color: #dc2626; }
+}
+
+/* ─────────────────────────────────────────────
+   Score ring animation
+   The --score-offset CSS variable is set inline
+   on the SVG circle element by ScoreRing.js
+───────────────────────────────────────────── */
+.score-ring-circle {
+  stroke-dasharray: 339.3;
+  stroke-dashoffset: 339.3;
+  animation: scoreFill 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+@keyframes scoreFill {
+  to { stroke-dashoffset: var(--score-offset, 100); }
+}
+
+/* ─────────────────────────────────────────────
+   Agent timeline step animations
+───────────────────────────────────────────── */
+.agent-step {
+  opacity: 0;
+  animation: agentEnter 0.4s ease forwards;
+}
+.agent-step:nth-child(1) { animation-delay: 0.0s; }
+.agent-step:nth-child(2) { animation-delay: 0.15s; }
+.agent-step:nth-child(3) { animation-delay: 0.3s; }
+.agent-step:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes agentEnter {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ─────────────────────────────────────────────
+   Violation card stagger
+───────────────────────────────────────────── */
+.violation-card {
+  opacity: 0;
+  animation: fadeUp 0.4s ease forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
