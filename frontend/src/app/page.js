@@ -22,6 +22,7 @@ import { useScan } from '../hooks/useScan'
 //   3. COMPLETE — full results dashboard
 // ─────────────────────────────────────────────
 
+
 export default function HomePage() {
   const [url, setUrl] = useState('')
 
